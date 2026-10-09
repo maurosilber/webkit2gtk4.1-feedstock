@@ -10,7 +10,7 @@ source:
   tag: "webkitgtk-${{ version }}"
 
 build:
-  number: 4
+  number: 5
   skip: not linux
   script:
     - |
@@ -37,6 +37,12 @@ requirements:
     - pkg-config
     - cmake
     - ninja
+    # Code generators that only run at build time. Keep them out of host so their
+    # run_exports (e.g. ruby -> libffi <3.6, perl) don't become runtime dependencies.
+    - gperf
+    - perl
+    - ruby
+    - unifdef
   host:
     - bubblewrap
     - enchant
@@ -47,7 +53,6 @@ requirements:
     - freetype
     - glib
     - gobject-introspection
-    - gperf
     - gst-plugins-bad
     - gst-plugins-base
     - gst-plugins-good
@@ -70,12 +75,9 @@ requirements:
     - libsystemd
     - libtasn1
     - libxslt
-    - perl
     # header generation breaks with py314+
     # we use python_abi to constrain python without making the linter think we also need it in run
     - python_abi 3.10.* *_cp*
-    - ruby
-    - unifdef
     - wayland-protocols
     - woff2
     - xdg-dbus-proxy
